@@ -64,7 +64,8 @@
             margin-top: 20px;
         }
 
-       /* Kommentek stílusa */
+        /* Kommentek stílusa */
+        /* Kommentek stílusa */
 .comment {
     background-color: #333;
     color: #ffffff;
@@ -123,52 +124,87 @@
     <!-- Firebase inicializálása és scriptek -->
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
+    <!-- Firebase Authentication inicializálása -->
+<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
+
     <script>
         // Firebase konfiguráció
-        const firebaseConfig = {
-            apiKey: "AIzaSyDNWHkdfwtPJb1KLPKkLUTLh0mHMukRadY",
-            authDomain: "films-bcc81.firebaseapp.com",
-            databaseURL: "https://films-bcc81-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "films-bcc81",
-            storageBucket: "films-bcc81.appspot.com",
-            messagingSenderId: "202459241023",
-            appId: "1:202459241023:web:a59e0203460ccb04f3768a",
-            measurementId: "G-N9LYG1Z83B"
-        };
+const firebaseConfig = {
+    apiKey: "AIzaSyDNWHkdfwtPJb1KLPKkLUTLh0mHMukRadY",
+    authDomain: "films-bcc81.firebaseapp.com",
+    databaseURL: "https://films-bcc81-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "films-bcc81",
+    storageBucket: "films-bcc81.appspot.com",
+    messagingSenderId: "202459241023",
+    appId: "1:202459241023:web:a59e0203460ccb04f3768a",
+    measurementId: "G-N9LYG1Z83B"
+};
 
-        // Firebase inicializálása
-        firebase.initializeApp(firebaseConfig);
+// Firebase inicializálása
+firebase.initializeApp(firebaseConfig);
 
-        // Firebase adatbázis referenciája
-        const database = firebase.database();
+// Firebase Authentication inicializálása
+const auth = firebase.auth();
+let currentUser;
 
-        // Hozzászólás hozzáadása
-        function addComment() {
-            const commentInput = document.querySelector('.comment-input');
-            const commentSection = document.getElementById('commentSection');
+// Firebase adatbázis referenciája
+const database = firebase.database();
 
-            if (commentInput.value.trim() !== '') {
-                // Komment hozzáadása a Firebase adatbázishoz
-                const commentRef = database.ref('comments').push();
-                commentRef.set({
-                    text: commentInput.value,
-                    timestamp: firebase.database.ServerValue.TIMESTAMP
-                });
+// Hozzászólás hozzáadása
+function addComment() {
+    const commentInput = document.querySelector('.comment-input');
+    const commentSection = document.getElementById('commentSection');
 
-                // Komment szöveges tartalmának mentése a Firebase Storage-ba
-                const storageRef = firebase.storage().ref();
-                const commentFileRef = storageRef.child('comments/' + commentRef.key + '.txt');
-                commentFileRef.putString(commentInput.value);
+    if (commentInput.value.trim() !== '') {
+        // Ellenőrizze, hogy a felhasználó be van-e jelentkezve
+        if (currentUser) {
+            // Ellenőrizze, hogy a felhasználó már hozzászólt-e
+            const userCommentsRef = database.ref(`user-comments/${currentUser.uid}`);
+            userCommentsRef.once('value', function (snapshot) {
+                if (!snapshot.val()) {
+                    // A felhasználó még nem hozzászólt, tehát hozzáadhatja a kommentet
+                    const commentRef = database.ref('comments').push();
+                    commentRef.set({
+                        text: commentInput.value,
+                        timestamp: firebase.database.ServerValue.TIMESTAMP,
+                        userId: currentUser.uid
+                    });
 
-                // Komment megjelenítése a felületen
-                const comment = document.createElement('div');
-                comment.classList.add('comment');
-                comment.innerHTML = `<p>${commentInput.value}</p><small>${formatCommentTime(commentRef.key)}</small>`;
-                commentSection.appendChild(comment);
+                    // Komment szöveges tartalmának mentése a Firebase Storage-ba
+                    const storageRef = firebase.storage().ref();
+                    const commentFileRef = storageRef.child('comments/' + commentRef.key + '.txt');
+                    commentFileRef.putString(commentInput.value);
 
-                commentInput.value = '';
-            }
+                    // Komment megjelenítése a felületen
+                    const comment = document.createElement('div');
+                    comment.classList.add('comment');
+                    comment.innerHTML = `<p>${commentInput.value}</p><small>${formatCommentTime(commentRef.key)}</small>`;
+                    commentSection.appendChild(comment);
+
+                    // Hozzáadja a felhasználóhoz tartozó kommentet
+                    userCommentsRef.set(true);
+
+                    commentInput.value = '';
+                } else {
+                    alert('Már hozzászóltál!');
+                }
+            });
+        } else {
+            alert('Először jelentkezz be!');
         }
+    }
+}
+
+// Firebase Authentication figyelő, hogy megállapítsuk, ha egy felhasználó be van jelentkezve
+auth.onAuthStateChanged(function (user) {
+    currentUser = user;
+});
+
+// Oldal betöltésekor a kommentek megjelenítése
+document.addEventListener('DOMContentLoaded', function () {
+    loadComments();
+});
 
         // Kommentek betöltése és megjelenítése
         function loadComments() {
