@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kérések</title>
+    <style>
+        /* A keresek.html oldal formázása */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1f1f1f;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #222;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+
+        section {
+            padding: 20px;
+            margin-right: 40px;
+            text-align: center;
+        }
+
+        .comment-form {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .comment-input {
+            width: 60%;
+            padding: 8px;
+            margin-right: 10px;
+        }
+
+        .comment-button {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .comments {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        footer {
+            background-color: #333;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <header style="display: flex; align-items: center; justify-content: center;">
+        <img src="C:\Users\PC\Desktop\Vidoes\Logo.png" alt="UCore Free Logo" style="width: 10%; max-width: 50px; display: block; margin-right: 10px;">
+        <h1>Kérések</h1>
+    </header>
+
+    <nav>
+        <a href="index.html">Főoldal</a>
+        <a href="keresek.html">Kérések</a>
+        <a href="Sign.html">Bejelentkezés</a>
+        <!-- Adjon hozzá linkeket más oldalakra, amint szükséges -->
+    </nav>
+
+    <section>
+        <h2>Kérések oldal tartalma</h2>
+        <!-- Az oldal tartalma -->
+
+        <!-- Komment űrlap -->
+        <div class="comment-form">
+            <input type="text" class="comment-input" placeholder="Add hozzászólásodat...">
+            <button class="comment-button" onclick="addComment()">Hozzászólás</button>
+        </div>
+
+        <!-- Kommentek megjelenítése -->
+        <div class="comments" id="commentSection">
+            <!-- Itt jelennek meg a kommentek -->
+        </div>
+    </section>
+
+    <footer>
+        &copy; 2024 UCore Free. Minden jog fenntartva.
+    </footer>
+
+    <!-- Firebase inicializálása és scriptek -->
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
+    <script>
+        // Firebase konfiguráció
+        const firebaseConfig = {
+            apiKey: "AIzaSyDNWHkdfwtPJb1KLPKkLUTLh0mHMukRadY",
+            authDomain: "films-bcc81.firebaseapp.com",
+            databaseURL: "https://films-bcc81-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "films-bcc81",
+            storageBucket: "films-bcc81.appspot.com",
+            messagingSenderId: "202459241023",
+            appId: "1:202459241023:web:a59e0203460ccb04f3768a",
+            measurementId: "G-N9LYG1Z83B"
+        };
+
+        // Firebase inicializálása
+        firebase.initializeApp(firebaseConfig);
+
+        // Firebase adatbázis referenciája
+        const database = firebase.database();
+
+        // Hozzászólás hozzáadása
+        function addComment() {
+            const commentInput = document.querySelector('.comment-input');
+            const commentSection = document.getElementById('commentSection');
+
+            if (commentInput.value.trim() !== '') {
+                // Komment hozzáadása a Firebase adatbázishoz
+                const commentRef = database.ref('comments').push();
+                commentRef.set({
+                    text: commentInput.value,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                });
+
+                // Komment megjelenítése a felületen
+                const comment = document.createElement('div');
+                comment.textContent = commentInput.value;
+                commentSection.appendChild(comment);
+
+                commentInput.value = '';
+            }
+        }
+
+        // Kommentek betöltése és megjelenítése
+        // Kommentek betöltése és megjelenítése
+function loadComments() {
+    const commentSection = document.getElementById('commentSection');
+
+    // Kommentek lekérése a Firebase adatbázisból a child_added eseménnyel
+    const commentsRef = database.ref('comments');
+    commentsRef.on('child_added', function (snapshot) {
+        const comment = snapshot.val().text;
+        const commentDiv = document.createElement('div');
+        commentDiv.textContent = comment;
+        commentSection.appendChild(commentDiv);
+    });
+
+    // Kommentek lekérése a Firebase adatbázisból a value eseménnyel
+    commentsRef.once('value', function (snapshot) {
+        commentSection.innerHTML = ''; // Törlés, hogy ne ismételjük meg a már megjelenített kommenteket
+        snapshot.forEach(function (childSnapshot) {
+            const comment = childSnapshot.val().text;
+            const commentDiv = document.createElement('div');
+            commentDiv.textContent = comment;
+            commentSection.appendChild(commentDiv);
+        });
+    });
+}
+
+// Oldal betöltésekor a kommentek megjelenítése
+document.addEventListener('DOMContentLoaded', function () {
+    loadComments();
+});
+
+    </script>
+</body>
+
+</html>

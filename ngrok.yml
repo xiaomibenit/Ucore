@@ -1,0 +1,7 @@
+authtoken: 2bg9YkHJqQOggz1qkPBkIyekc2U_4qRfwEZjcah4VigVHakuE
+
+tunnels:
+  web:
+    addr: 80
+  app:
+    addr: 8080

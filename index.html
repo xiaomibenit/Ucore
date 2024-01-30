@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCore Free</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1f1f1f;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #222;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+
+        section {
+            padding: 20px;
+            margin-right: 40px;
+        }
+
+        footer {
+            background-color: #333;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .movie-cover {
+            cursor: pointer;
+        }
+    </style>
+    <!-- Firebase initialization script -->
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+    <script>
+        // Your Firebase configuration
+        const firebaseConfig = {
+  apiKey: "AIzaSyDNWHkdfwtPJb1KLPKkLUTLh0mHMukRadY",
+  authDomain: "films-bcc81.firebaseapp.com",
+  databaseURL: "https://films-bcc81-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "films-bcc81",
+  storageBucket: "films-bcc81.appspot.com",
+  messagingSenderId: "202459241023",
+  appId: "1:202459241023:web:a59e0203460ccb04f3768a",
+  measurementId: "G-N9LYG1Z83B"
+};
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
+</head>
+
+<body>
+    <header style="display: flex; align-items: center; justify-content: center;">
+        <img src="C:\Users\PC\Desktop\Vidoes\Logo.png" alt="UCore Free Logo" style="width: 10%; max-width: 50px; display: block; margin-right: 10px;">
+        <h1>UCore Free</h1>
+    </header>
+
+    <nav>
+        <a href="index.html">Főoldal</a>
+        <a href="keresek.html">Kérések</a>
+        <a href="Sign.html">Bejelentkezés</a>
+        <!-- Egyéb filmek ... -->
+    </nav>
+
+    <section id="latestMovies">
+        <!-- Borítóképek -->
+        
+    <h1 style="text-indent: 80px;">Verdák</h1><img src="C:\Users\PC\Desktop\Vidoes\Verdak.jpg" alt="Film 1" class="movie-cover" data-video="https://firebasestorage.googleapis.com/v0/b/films-bcc81.appspot.com/o/Verdak.mp4?alt=media&token=2f43f20e-4d79-4995-a344-d07bbe0f826c">
+    <h1 style="text-indent: 80px;">Verdák 2</h1>
+        <img src="C:\Users\PC\Desktop\Vidoes\Verdak2.jpg" alt="Film 2" class="movie-cover" width="239px" data-video="https://firebasestorage.googleapis.com/v0/b/films-bcc81.appspot.com/o/Verdak2.mp4?alt=media&token=f002dfe3-5124-416a-b928-b6fed4f224e8" >
+        <!-- Egyéb borítóképek ... -->
+    </section>
+
+    <footer>
+        &copy; 2024 UCore Free. Minden jog fenntartva.
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // A .movie-cover elemekhez kattintás esemény hozzáadása
+            var movieCovers = document.querySelectorAll(".movie-cover");
+            movieCovers.forEach(function (cover) {
+                cover.addEventListener("click", function () {
+                    var videoPath = this.getAttribute("data-video");
+                    if (videoPath) {
+                        window.open(videoPath, "_blank");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
