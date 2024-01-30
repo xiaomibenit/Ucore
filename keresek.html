@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kérések</title>
     <style>
-        /* A keresek.html oldal formázása */
+        /* Alap stílusok */
         body {
             font-family: Arial, sans-serif;
             background-color: #1f1f1f;
@@ -15,16 +15,21 @@
             padding: 0;
         }
 
+        header, nav, section, footer {
+            text-align: center;
+        }
+
         header {
             background-color: #333;
             padding: 10px;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         nav {
             background-color: #222;
             padding: 10px;
-            text-align: center;
         }
 
         nav a {
@@ -36,7 +41,6 @@
         section {
             padding: 20px;
             margin-right: 40px;
-            text-align: center;
         }
 
         .comment-form {
@@ -60,6 +64,18 @@
             margin-top: 20px;
         }
 
+       /* Kommentek stílusa */
+.comment {
+    background-color: #333;
+    color: #ffffff;
+    padding: 10px;
+    margin: 10px auto; /* Margin hozzáadva, és az 'auto' érték középre igazítja */
+    border-radius: 5px;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+
         footer {
             background-color: #333;
             padding: 10px;
@@ -72,7 +88,7 @@
 </head>
 
 <body>
-    <header style="display: flex; align-items: center; justify-content: center;">
+    <header>
         <img src="Logo.png" alt="UCore Free Logo" style="width: 10%; max-width: 50px; display: block; margin-right: 10px;">
         <h1>Kérések</h1>
     </header>
@@ -139,9 +155,15 @@
                     timestamp: firebase.database.ServerValue.TIMESTAMP
                 });
 
+                // Komment szöveges tartalmának mentése a Firebase Storage-ba
+                const storageRef = firebase.storage().ref();
+                const commentFileRef = storageRef.child('comments/' + commentRef.key + '.txt');
+                commentFileRef.putString(commentInput.value);
+
                 // Komment megjelenítése a felületen
                 const comment = document.createElement('div');
-                comment.textContent = commentInput.value;
+                comment.classList.add('comment');
+                comment.innerHTML = `<p>${commentInput.value}</p><small>${formatCommentTime(commentRef.key)}</small>`;
                 commentSection.appendChild(comment);
 
                 commentInput.value = '';
@@ -149,36 +171,76 @@
         }
 
         // Kommentek betöltése és megjelenítése
-        // Kommentek betöltése és megjelenítése
-function loadComments() {
-    const commentSection = document.getElementById('commentSection');
+        function loadComments() {
+            const commentSection = document.getElementById('commentSection');
 
-    // Kommentek lekérése a Firebase adatbázisból a child_added eseménnyel
-    const commentsRef = database.ref('comments');
-    commentsRef.on('child_added', function (snapshot) {
-        const comment = snapshot.val().text;
-        const commentDiv = document.createElement('div');
-        commentDiv.textContent = comment;
-        commentSection.appendChild(commentDiv);
-    });
+            // Kommentek lekérése a Firebase adatbázisból a child_added eseménnyel
+            const commentsRef = database.ref('comments');
+            commentsRef.on('child_added', function (snapshot) {
+                const commentText = snapshot.val().text;
+                const commentTimestamp = snapshot.val().timestamp;
 
-    // Kommentek lekérése a Firebase adatbázisból a value eseménnyel
-    commentsRef.once('value', function (snapshot) {
-        commentSection.innerHTML = ''; // Törlés, hogy ne ismételjük meg a már megjelenített kommenteket
-        snapshot.forEach(function (childSnapshot) {
-            const comment = childSnapshot.val().text;
-            const commentDiv = document.createElement('div');
-            commentDiv.textContent = comment;
-            commentSection.appendChild(commentDiv);
+                // Komment időbélyeg formázása
+                const commentTime = formatCommentTime(commentTimestamp);
+
+                // Komment div létrehozása és formázása
+                const commentDiv = document.createElement('div');
+                commentDiv.classList.add('comment');
+                commentDiv.innerHTML = `<p>${commentText}</p><small>${commentTime}</small>`;
+
+                // Komment megjelenítése a felületen
+                commentSection.appendChild(commentDiv);
+            });
+
+            // Kommentek lekérése a Firebase adatbázisból a value eseménnyel
+            commentsRef.once('value', function (snapshot) {
+                commentSection.innerHTML = ''; // Törlés, hogy ne ismételjük meg a már megjelenített kommenteket
+                snapshot.forEach(function (childSnapshot) {
+                    const commentText = childSnapshot.val().text;
+                    const commentTimestamp = childSnapshot.val().timestamp;
+
+                    // Komment időbélyeg formázása
+                    const commentTime = formatCommentTime(commentTimestamp);
+
+                    // Komment div létrehozása és formázása
+                    const commentDiv = document.createElement('div');
+                    commentDiv.classList.add('comment');
+                    commentDiv.innerHTML = `<p>${commentText}</p><small>${commentTime}</small>`;
+
+                    // Komment megjelenítése a felületen
+                    commentSection.appendChild(commentDiv);
+                });
+            });
+        }
+
+        // Komment időbélyeg formázása
+        function formatCommentTime(timestamp) {
+            const currentDate = new Date();
+            const commentDate = new Date(timestamp);
+            const timeDifference = currentDate - commentDate;
+
+            if (timeDifference < 60000) {
+                // Kevesebb mint 1 perc
+                return 'Épp most';
+            } else if (timeDifference < 3600000) {
+                // Kevesebb mint 1 óra
+                const minutes = Math.floor(timeDifference / 60000);
+                return `${minutes} perce`;
+            } else if (commentDate.toDateString() === currentDate.toDateString()) {
+                // Ugyanaz a nap
+                const hours = commentDate.getHours();
+                const minutes = commentDate.getMinutes();
+                return `Ma ${hours}:${minutes}`;
+            } else {
+                // Másnap vagy régebbi
+                return commentDate.toLocaleString();
+            }
+        }
+
+        // Oldal betöltésekor a kommentek megjelenítése
+        document.addEventListener('DOMContentLoaded', function () {
+            loadComments();
         });
-    });
-}
-
-// Oldal betöltésekor a kommentek megjelenítése
-document.addEventListener('DOMContentLoaded', function () {
-    loadComments();
-});
-
     </script>
 </body>
 
