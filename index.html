@@ -18,6 +18,20 @@
             background-color: #333;
             padding: 10px;
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        header img {
+            width: 10%;
+            max-width: 50px;
+            display: block;
+            margin-right: 10px;
+        }
+
+        header h1 {
+            margin: 0;
         }
 
         nav {
@@ -30,11 +44,60 @@
             color: #ffffff;
             text-decoration: none;
             margin: 0 15px;
+            transition: color 0.3s ease-in-out;
+        }
+
+        nav a:hover {
+            color: #ffd700; /* változtathatod az elérhető színre */
         }
 
         section {
             padding: 20px;
             margin-right: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .movie {
+            margin: 20px;
+            text-align: center;
+            max-width: 300px;
+        }
+
+        .movie h1 {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .movie-cover {
+            cursor: pointer;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .movie-cover:hover {
+            transform: scale(1.1);
+        }
+
+        .video-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+        }
+
+        .video-container video {
+            width: 80%;
+            max-width: 800px;
         }
 
         footer {
@@ -45,25 +108,12 @@
             bottom: 0;
             width: 100%;
         }
-
-        .movie-cover {
-            cursor: pointer;
-        }
     </style>
     <!-- Firebase initialization script -->
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
     <script>
         // Your Firebase configuration
-        const firebaseConfig = {
-  apiKey: "AIzaSyDNWHkdfwtPJb1KLPKkLUTLh0mHMukRadY",
-  authDomain: "films-bcc81.firebaseapp.com",
-  databaseURL: "https://films-bcc81-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "films-bcc81",
-  storageBucket: "films-bcc81.appspot.com",
-  messagingSenderId: "202459241023",
-  appId: "1:202459241023:web:a59e0203460ccb04f3768a",
-  measurementId: "G-N9LYG1Z83B"
-};
+        
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
@@ -71,8 +121,8 @@
 </head>
 
 <body>
-    <header style="display: flex; align-items: center; justify-content: center;">
-        <img src="Logo.png" alt="UCore Free Logo" style="width: 10%; max-width: 50px; display: block; margin-right: 10px;">
+    <header>
+        <img src="Logo.png" alt="UCore Free Logo">
         <h1>UCore Free</h1>
     </header>
 
@@ -80,20 +130,35 @@
         <a href="index.html">Főoldal</a>
         <a href="keresek.html">Kérések</a>
         <a href="Sign.html">Bejelentkezés</a>
-        <!-- Egyéb filmek ... -->
     </nav>
 
     <section id="latestMovies">
-        <!-- Borítóképek -->
-        
-    <h1 style="text-indent: 80px;">Verdák</h1><img src="Verdak.jpg" alt="Film 1" class="movie-cover" data-video="https://firebasestorage.googleapis.com/v0/b/films-bcc81.appspot.com/o/Verdak.mp4?alt=media&token=2f43f20e-4d79-4995-a344-d07bbe0f826c">
-    <h1 style="text-indent: 80px;">Verdák 2</h1>
-    <img src="Verdak2.jpg" alt="Film 2" class="movie-cover" width="239px" data-video="https://firebasestorage.googleapis.com/v0/b/films-bcc81.appspot.com/o/Verdak2.mp4?alt=media&token=f002dfe3-5124-416a-b928-b6fed4f224e8" >
-
-    <h1 style="text-indent: 20px;">Bound (fülledtség)</h1><img src="bound.jpg"  style="width: 245px;"  alt="Film 1" class="movie-cover" data-video="https://firebasestorage.googleapis.com/v0/b/films-bcc81.appspot.com/o/%2C%2CQfiYzMuczM18CXpJXYmF2UgYFVgYDNx4SOwgzMuAjL2czLcVWbvJHaDBCMuQzLcJXZzd3byJ0ZuV3ctF2UgkybrNWZHBSZrlGbgwCTNRFSLhCI2MjL3MTNvwFdptkYldVZsBHcBBSKw4iNg4WZ6lGVgsDe15WaMByOWRVLUJVQNNFKgAjL18CXhxGbpp3bNJiOiQnbldWYtIXZzVnI.mp4?alt=media&token=7df8d5de-de2d-4bb5-bf49-ac9b4dec2e6c">
-
-        <!-- Egyéb borítóképek ... -->
+        <div class="movie">
+            <h1>Verdák</h1>
+            <img src="Verdak.jpg" alt="Film 1" class="movie-cover" data-video="https://firebasestorage.googleapis.com/v0/b/films-bcc81.appspot.com/o/Verdak.mp4?alt=media&token=2f43f20e-4d79-4995-a344-d07bbe0f826c">
+        </div>
+    
+        <div class="movie">
+            <h1>Verdák 2</h1>
+            <img src="Verdak2.jpg" alt="Film 2" class="movie-cover" data-video="https://firebasestorage.googleapis.com/v0/b/films-bcc81.appspot.com/o/Verdak2.mp4?alt=media&token=f002dfe3-5124-416a-b928-b6fed4f224e8">
+        </div>
+    
+        <div class="movie">
+            <h1>Verdák 3</h1>
+            <img src="Verdak3.jpg" alt="Film 3" class="movie-cover" data-video="https://firebasestorage.googleapis.com/v0/b/films-bcc81.appspot.com/o/%2C%2CQfiYzMuczM18CXpJXYmF2UgYFVgYDNx4SOwgzMuAjL2czLcVWbvJHaDBCMuQzLcJXZzd3byJ0ZuV3ctF2UgkybrNWZHBSZrlGbgwCTNRFSLhCI2MjL3MTNvwFdptkYldVZsBHcBBSKw4iNg4WZ6lGVgsDe15WaMByOWRVLUJVQNNFKgAjL18CXhxGbpp3bNJiOiQnbldWYtIXZ%20(1).mp4?alt=media&token=0cc7805d-a703-416b-b24b-0935f7b36b3f">
+        </div>
+    
+        <div class="movie">
+            <h1>Bound (fülledtség)</h1>
+            <img src="bound.jpg" alt="Film 4" class="movie-cover" data-video="https://firebasestorage.googleapis.com/v0/b/films-bcc81.appspot.com/o/%2C%2CQfiYzMuczM18CXpJXYmF2UgYFVgYDNx4SOwgzMuAjL2czLcVWbvJHaDBCMuQzLcJXZzd3byJ0ZuV3ctF2UgkybrNWZHBSZrlGbgwCTNRFSLhCI2MjL3MTNvwFdptkYldVZsBHcBBSKw4iNg4WZ6lGVgsDe15WaMByOWRVLUJVQNNFKgAjL18CXhxGbpp3bNJiOiQnbldWYtIXZzVnI.mp4?alt=media&token=7df8d5de-de2d-4bb5-bf49-ac9b4dec2e6c">
+        </div>
     </section>
+
+    <div class="video-container" id="videoContainer">
+        <video controls id="videoPlayer">
+            Your browser does not support the video tag.
+        </video>
+    </div>
 
     <footer>
         &copy; 2024 UCore Free. Minden jog fenntartva.
@@ -101,15 +166,29 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // A .movie-cover elemekhez kattintás esemény hozzáadása
             var movieCovers = document.querySelectorAll(".movie-cover");
+            var videoContainer = document.getElementById("videoContainer");
+            var videoPlayer = document.getElementById("videoPlayer");
+
             movieCovers.forEach(function (cover) {
                 cover.addEventListener("click", function () {
                     var videoPath = this.getAttribute("data-video");
                     if (videoPath) {
-                        window.open(videoPath, "_blank");
+                        videoPlayer.src = videoPath;
+                        videoContainer.style.display = "flex";
                     }
                 });
+            });
+
+            // Beállítás az ablak bezárásához
+            videoContainer.addEventListener("click", function () {
+                videoContainer.style.display = "none";
+                videoPlayer.pause();
+            });
+
+            // Megakadályozza a videó lejátszását a háttérben a bezáráskor
+            videoPlayer.addEventListener("click", function (event) {
+                event.stopPropagation();
             });
         });
     </script>
