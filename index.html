@@ -12,39 +12,29 @@
             margin: 0;
             padding: 0;
             animation: fadeIn 1.5s ease-in-out;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #fff;
         }
         header {
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
             padding: 20px;
             text-align: center;
-            width: 100%;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            animation: slideDown 1s ease-in-out;
         }
         section {
             max-width: 800px;
-            margin: 20px;
+            margin: 20px auto;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            animation: fadeIn 1s ease-in-out;
-            text-align: justify;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            animation: slideUp 1s ease-in-out;
             position: relative;
         }
         footer {
             text-align: center;
             padding: 10px;
-            background-color: rgba(0, 0, 0, 0.8);
-            width: 100%;
-            margin-top: auto;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        }
-        h1, h2, h3 {
-            color: #3498db;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            animation: slideUp 1s ease-in-out;
         }
         @keyframes fadeIn {
             from {
@@ -54,34 +44,35 @@
                 opacity: 1;
             }
         }
-        .rules-list {
-            list-style-type: none;
-            padding: 0;
+        @keyframes slideDown {
+            from {
+                margin-top: -100px;
+            }
+            to {
+                margin-top: 0;
+            }
         }
-        .rules-list li {
-            margin-bottom: 10px;
-            padding-left: 20px;
-            position: relative;
+        @keyframes slideUp {
+            from {
+                margin-bottom: -100px;
+            }
+            to {
+                margin-bottom: 0;
+            }
         }
-        .rules-list li:before {
-            content: '\2022';
-            color: #3498db;
-            font-size: 20px;
-            position: absolute;
-            left: 0;
+        /* Új stílusok a szakaszokhoz */
+        section {
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            animation: slideUp 1s ease-in-out;
+            padding: 20px;
         }
+        section h2, section p, section ul {
+            text-align: left;
+        }
+        /* Új stílusok a Discord és TikTok szekciókhoz */
         .right-align {
             text-align: right;
-        }
-        .social-links {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 10px;
-        }
-        .social-links a {
-            margin-left: 10px;
-            color: #3498db;
-            text-decoration: none;
         }
     </style>
 </head>
@@ -98,7 +89,7 @@
 
     <section>
         <h2>Rules</h2>
-        <ul class="rules-list">
+        <ul>
             <li>No inappropriate language!</li>
             <li>Respect other players!</li>
             <li>No cheating or hacks!</li>
@@ -121,11 +112,6 @@
     </section>
 
     <footer>
-        <div class="social-links">
-            <a href="#" target="_blank">Facebook</a>
-            <a href="#" target="_blank">Twitter</a>
-            <a href="#" target="_blank">Instagram</a>
-        </div>
         <p></p>
     </footer>
 </body>
