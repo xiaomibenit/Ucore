@@ -1,197 +1,118 @@
 <!DOCTYPE html>
-<html lang="hu">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UCore Free</title>
+    <title>NPCCraft Web</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #1f1f1f;
-            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            background: url('background.jpg') no-repeat center center fixed;
+            background-size: cover;
             margin: 0;
             padding: 0;
+            animation: fadeIn 1.5s ease-in-out;
         }
-
         header {
-            background-color: #333;
-            padding: 10px;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        header img {
-            width: 10%;
-            max-width: 50px;
-            display: block;
-            margin-right: 10px;
-        }
-
-        header h1 {
-            margin: 0;
-        }
-
-        nav {
-            background-color: #222;
-            padding: 10px;
-            text-align: center;
-        }
-
-        nav a {
-            color: #ffffff;
-            text-decoration: none;
-            margin: 0 15px;
-            transition: color 0.3s ease-in-out;
-        }
-
-        nav a:hover {
-            color: #ffd700; /* változtathatod az elérhető színre */
-        }
-
-        section {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
             padding: 20px;
-            margin-right: 40px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-        }
-
-        .movie {
-            margin: 20px;
             text-align: center;
-            max-width: 300px;
+            animation: slideDown 1s ease-in-out;
         }
-
-        .movie h1 {
-            font-size: 1.2em;
-            margin: 10px 0;
-        }
-
-        .movie-cover {
-            cursor: pointer;
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            transition: transform 0.2s ease-in-out;
-        }
-
-        .movie-cover:hover {
-            transform: scale(1.1);
-        }
-
-        .video-container {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            justify-content: center;
-            align-items: center;
-            z-index: 1;
-        }
-
-        .video-container video {
-            width: 80%;
+        section {
             max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            animation: slideUp 1s ease-in-out;
+            position: relative;
         }
-
         footer {
-            background-color: #333;
-            padding: 10px;
             text-align: center;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            animation: slideUp 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        @keyframes slideDown {
+            from {
+                margin-top: -100px;
+            }
+            to {
+                margin-top: 0;
+            }
+        }
+        @keyframes slideUp {
+            from {
+                margin-bottom: -100px;
+            }
+            to {
+                margin-bottom: 0;
+            }
+        }
+        /* Új stílusok a szakaszokhoz */
+        section {
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            animation: slideUp 1s ease-in-out;
+            padding: 20px;
+        }
+        section h2, section p, section ul {
+            text-align: left;
+        }
+        /* Új stílusok a Discord és TikTok szekciókhoz */
+        .right-align {
+            text-align: right;
         }
     </style>
-    <!-- Firebase initialization script -->
-    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
-    <script>
-        // Your Firebase configuration
-        
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-    </script>
 </head>
-
 <body>
     <header>
-        <img src="Logo.png" alt="UCore Free Logo">
-        <h1>UCore Free</h1>
+        <h1>Welcome to NPCCraft Minecraft Server</h1>
+        <p>Join the adventure now!</p>
     </header>
 
-    <nav>
-        <a href="index.html">Főoldal</a>
-        <a href="keresek.html">Kérések</a>
-        <a href="Sign.html">Bejelentkezés</a>
-    </nav>
-
-    <section id="latestMovies">
-        <div class="movie">
-            <h1>Verdák</h1>
-            <img src="Verdak.jpg" alt="Film 1" class="movie-cover" data-video="https://firebasestorage.googleapis.com/v0/b/films-bcc81.appspot.com/o/Verdak.mp4?alt=media&token=2f43f20e-4d79-4995-a344-d07bbe0f826c">
-        </div>
-    
-        <div class="movie">
-            <h1>Verdák 2</h1>
-            <img src="Verdak2.jpg" alt="Film 2" class="movie-cover" data-video="https://firebasestorage.googleapis.com/v0/b/films-bcc81.appspot.com/o/Verdak2.mp4?alt=media&token=f002dfe3-5124-416a-b928-b6fed4f224e8">
-        </div>
-    
-        <div class="movie">
-            <h1>Verdák 3</h1>
-            <img src="Verdak3.jpg" alt="Film 3" class="movie-cover" data-video="https://firebasestorage.googleapis.com/v0/b/films-bcc81.appspot.com/o/%2C%2CQfiYzMuczM18CXpJXYmF2UgYFVgYDNx4SOwgzMuAjL2czLcVWbvJHaDBCMuQzLcJXZzd3byJ0ZuV3ctF2UgkybrNWZHBSZrlGbgwCTNRFSLhCI2MjL3MTNvwFdptkYldVZsBHcBBSKw4iNg4WZ6lGVgsDe15WaMByOWRVLUJVQNNFKgAjL18CXhxGbpp3bNJiOiQnbldWYtIXZ%20(1).mp4?alt=media&token=0cc7805d-a703-416b-b24b-0935f7b36b3f">
-        </div>
-    
-        <div class="movie">
-            <h1>Bound (fülledtség)</h1>
-            <img src="bound.jpg" alt="Film 4" class="movie-cover" data-video="https://firebasestorage.googleapis.com/v0/b/films-bcc81.appspot.com/o/%2C%2CQfiYzMuczM18CXpJXYmF2UgYFVgYDNx4SOwgzMuAjL2czLcVWbvJHaDBCMuQzLcJXZzd3byJ0ZuV3ctF2UgkybrNWZHBSZrlGbgwCTNRFSLhCI2MjL3MTNvwFdptkYldVZsBHcBBSKw4iNg4WZ6lGVgsDe15WaMByOWRVLUJVQNNFKgAjL18CXhxGbpp3bNJiOiQnbldWYtIXZzVnI.mp4?alt=media&token=7df8d5de-de2d-4bb5-bf49-ac9b4dec2e6c">
-        </div>
+    <section>
+        <h2>About Us</h2>
+        <p>Explore the exciting world of NPCCraft Minecraft Server. Join us for an immersive and enjoyable gaming experience.</p>
     </section>
 
-    <div class="video-container" id="videoContainer">
-        <video controls id="videoPlayer">
-            Your browser does not support the video tag.
-        </video>
-    </div>
+    <section>
+        <h2>Rules</h2>
+        <ul>
+            <li>No inappropriate language!</li>
+            <li>Respect other players!</li>
+            <li>No cheating or hacks!</li>
+        </ul>
+    </section>
+
+    <section class="right-align">
+        <h2>How to Join</h2>
+        <p>Connect to our server by entering the following IP address in Minecraft: <strong>america-stick.gl.joinmc.link</strong></p>
+    </section>
+
+    <section class="right-align">
+        <h2>Discord</h2>
+        <p>Join our Discord community for updates and discussions: <a href="https://discord.gg/MNVmyWkgnw" target="_blank">Discord Invite</a></p>
+    </section>
+
+    <section class="right-align">
+        <h2>TikTok</h2>
+        <p>Follow us on TikTok for cool videos: <a href="https://www.tiktok.com/@npc.craft" target="_blank">TikTok Profile</a></p>
+    </section>
 
     <footer>
-        &copy; 2024 UCore Free. Minden jog fenntartva.
+        <p>Contact: info@americastick.com</p>
     </footer>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var movieCovers = document.querySelectorAll(".movie-cover");
-            var videoContainer = document.getElementById("videoContainer");
-            var videoPlayer = document.getElementById("videoPlayer");
-
-            movieCovers.forEach(function (cover) {
-                cover.addEventListener("click", function () {
-                    var videoPath = this.getAttribute("data-video");
-                    if (videoPath) {
-                        videoPlayer.src = videoPath;
-                        videoContainer.style.display = "flex";
-                    }
-                });
-            });
-
-            // Beállítás az ablak bezárásához
-            videoContainer.addEventListener("click", function () {
-                videoContainer.style.display = "none";
-                videoPlayer.pause();
-            });
-
-            // Megakadályozza a videó lejátszását a háttérben a bezáráskor
-            videoPlayer.addEventListener("click", function (event) {
-                event.stopPropagation();
-            });
-        });
-    </script>
 </body>
-
 </html>
