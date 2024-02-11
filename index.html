@@ -1,136 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <title>Kő, Papír, Olló</title>
-  <style>
-    /* CSS stílusok */
-    /* Itt helyezd el a stílusokat */
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-
-    @keyframes shake {
-      0%, 100% {
-        transform: translateX(0);
-      }
-      25%, 75% {
-        transform: translateX(-10px);
-      }
-      50% {
-        transform: translateX(10px);
-      }
-    }
-
-    .options button {
-      animation: fadeIn 0.8s ease-in-out;
-    }
-
-    .result {
-      animation: fadeIn 1s ease-in-out;
-    }
-
-    .options button:hover {
-      animation: shake 0.5s ease-in-out;
-    }
-
-    /* Hozzáadott stílus a cooldown-hoz */
-    .options button.cooldown {
-      pointer-events: none; /* Letiltja a gombokra való kattintást */
-      opacity: 0.5; /* Csökkenti a gombok átláthatóságát */
-    }
-  </style>
-  <script>
-    var pontszam = 0;
-    var nehezseg = 'kozepes'; // alapértelmezett nehézségi szint
-
-    function jatekValasztas() {
-      var lehetosegek = ["Kő", "Papír", "Olló"];
-      if (nehezseg === 'kozepes') {
-        return lehetosegek[Math.floor(Math.random() * lehetosegek.length)];
-      } else if (nehezseg === 'nehez') {
-        var veletlenIndex = Math.floor(Math.random() * 100); // Nagyobb tartomány
-        if (veletlenIndex < 33) { // 33% esély a kőre
-          return "Kő";
-        } else if (veletlenIndex < 66) { // 33% esély a papírra
-          return "Papír";
-        } else { // Maradék esetben olló
-          return "Olló";
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlatShooter Letöltés</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
-      }
-    }
-
-    function jatekEredmeny(felhasznaloValasztas) {
-      var gombok = document.getElementsByClassName("options")[0].getElementsByTagName("button");
-
-      // Letiltjuk a gombokat egy rövid ideig
-      for (var i = 0; i < gombok.length; i++) {
-        gombok[i].classList.add("cooldown");
-      }
-
-      setTimeout(function() {
-        for (var i = 0; i < gombok.length; i++) {
-          gombok[i].classList.remove("cooldown");
+        .container {
+            opacity: 0;
+            animation: fade-in 1s forwards;
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
-      }, 2000); // 2 másodperces cooldown
-
-      var gepValasztas = jatekValasztas();
-      var eredmeny = "";
-
-      if (felhasznaloValasztas === gepValasztas) {
-        eredmeny = "Döntetlen!";
-      } else if (
-        (felhasznaloValasztas === "Kő" && gepValasztas === "Olló") ||
-        (felhasznaloValasztas === "Papír" && gepValasztas === "Kő") ||
-        (felhasznaloValasztas === "Olló" && gepValasztas === "Papír")
-      ) {
-        eredmeny = "Nyertél!";
-        pontszam++;
-      } else {
-        eredmeny = "Vesztettél!";
-        pontszam = Math.max(0, pontszam - 1);
-      }
-
-      var eredmenyDiv = document.getElementById("eredmeny");
-      var pontszamDiv = document.getElementById("pontszam");
-      eredmenyDiv.innerHTML = "Te választásod: " + felhasznaloValasztas + "<br>Gép választása: " + gepValasztas + "<br>Eredmény: " + eredmeny;
-      pontszamDiv.innerHTML = "Pontszám: " + pontszam;
-    }
-
-    function ujJatek() {
-      pontszam = 0;
-      var eredmenyDiv = document.getElementById("eredmeny");
-      var pontszamDiv = document.getElementById("pontszam");
-      eredmenyDiv.innerHTML = "";
-      pontszamDiv.innerHTML = "Pontszám: 0";
-    }
-  </script>
+        h1 {
+            color: #4CAF50;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+        .download-button {
+            opacity: 0;
+            animation: fade-in 1s forwards;
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 20px;
+            transition: background-color 0.3s ease;
+        }
+        .download-button:hover {
+            background-color: #45a049;
+        }
+        .footer {
+            opacity: 0;
+            animation: fade-in 1s forwards;
+            padding: 20px 0;
+            background-color: #333;
+            color: white;
+            text-align: center;
+        }
+        .footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Kő, Papír, Olló Játék</h1>
-    <div id="eredmeny" class="result"></div>
-    <div class="options">
-      <button onclick="jatekEredmeny('Kő')">Kő</button>
-      <button onclick="jatekEredmeny('Papír')">Papír</button>
-      <button onclick="jatekEredmeny('Olló')">Olló</button>
+    <div class="container">
+        <h1>PlatShooter Letöltése</h1>
+        <p>Kattints a gombra a játék letöltéséhez!</p>
+        <a href="https://firebasestorage.googleapis.com/v0/b/films-bcc81.appspot.com/o/PlatShooter.rar?alt=media&token=5a639aaf-db4a-4f60-9b0f-20b04839ca85" class="download-button">Letöltés</a>
     </div>
-    <div id="pontszam" class="score">Pontszám: 0</div>
-    <button onclick="ujJatek()">Új játék</button>
-    <div class="difficulty">
-      <label>Nehézségi szint:</label>
-      <select onchange="nehezseg = this.value;">
-        <option value="kozepes" selected>Közepes</option>
-        <option value="nehez">Nehéz</option>
-      </select>
-    </div>
-  </div>
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 PlatShooter. Minden jog fenntartva.</p>
+        </div>
+    </footer>
 </body>
 </html>
