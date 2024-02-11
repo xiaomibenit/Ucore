@@ -1,87 +1,125 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PlatShooter Letöltés</title>
+    <title>PlatShooter Download</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        .container {
-            opacity: 0;
-            animation: fade-in 1s forwards;
-            width: 80%;
-            margin: 0 auto;
-            text-align: center;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        h1 {
-            color: #4CAF50;
-            font-size: 36px;
-            margin-bottom: 20px;
-        }
-        p {
-            font-size: 18px;
-            margin-bottom: 40px;
-        }
-        .download-button {
-            opacity: 0;
-            animation: fade-in 1s forwards;
-            display: inline-block;
-            padding: 15px 30px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 20px;
-            transition: background-color 0.3s ease;
-        }
-        .download-button:hover {
-            background-color: #45a049;
-        }
-        .footer {
-            opacity: 0;
-            animation: fade-in 1s forwards;
-            padding: 20px 0;
-            background-color: #333;
-            color: white;
-            text-align: center;
-        }
-        .footer p {
-            margin: 0;
-            font-size: 14px;
-        }
-        @keyframes fade-in {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('background.jpg'); /* Set background image */
+    background-size: cover;
+    background-position: center;
+    color: #fff; /* Text color is white */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    opacity: 0;
+    animation: fade-in 1s forwards;
+    width: 80%;
+    margin: 0 auto;
+    text-align: center; /* Center align */
+    padding: 0 10%; /* Offset to the right */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    color: #4CAF50;
+    font-size: 3.5rem; /* Larger font size */
+    margin-bottom: 20px;
+    animation: slide-in 1s ease-out forwards;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add shadow to text */
+}
+
+p {
+    font-size: 1.5rem; /* Larger font size */
+    margin-bottom: 40px;
+    animation: slide-in 1s ease-out forwards;
+}
+
+.story {
+    background-color: rgba(0, 0, 0, 0.5); /* Transparent background */
+    padding: 40px;
+    border-radius: 10px;
+    width: 70%; /* Width of the text box */
+    margin: 0 auto 40px auto; /* Center align */
+    animation: slide-in 1s ease-out forwards;
+}
+
+.download-button {
+    opacity: 0;
+    animation: fade-in 1s forwards;
+    display: inline-block;
+    padding: 20px 40px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.download-button:hover {
+    background-color: #45a049;
+}
+
+.footer {
+    opacity: 0;
+    animation: fade-in 1s forwards;
+    padding: 20px 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Transparent background for footer */
+    color: white;
+    text-align: center;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 14px;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateY(-50px);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>PlatShooter Letöltése</h1>
-        <p>Kattints a gombra a játék letöltéséhez!</p>
-        <a href="https://firebasestorage.googleapis.com/v0/b/films-bcc81.appspot.com/o/PlatShooter.rar?alt=media&token=5a639aaf-db4a-4f60-9b0f-20b04839ca85" class="download-button">Letöltés</a>
+        <h1>PlatShooter</h1> <!-- Modify text -->
+        <div class="story">
+            <p>PlatShooter is an exciting shooter game where the main character, the last human, must fight alone in a distant future dominated by drones.</p>
+            <p>The fate of humanity is in your hands! Take up the fight and free the world from the reign of robots!</p>
+        </div>
+        <a href="https://firebasestorage.googleapis.com/v0/b/films-bcc81.appspot.com/o/PlatShooter.rar?alt=media&token=5a639aaf-db4a-4f60-9b0f-20b04839ca85" class="download-button">Download Game</a>
     </div>
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 PlatShooter. Minden jog fenntartva.</p>
+            <p>&copy; 2024 PlatShooter. All rights reserved.</p>
         </div>
     </footer>
 </body>
