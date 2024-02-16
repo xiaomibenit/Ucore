@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fájlfeltöltés Firebase Storage-ba</title>
+</head>
+<body>
+    <input type="file" id="fileInput" accept=".mp4">
+    <button onclick="uploadFile()">Feltöltés</button>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.5/firebase-storage.js"></script>
+    <script>
+        // Firebase konfiguráció
+        const firebaseConfig = {
+            apiKey: "AIzaSyDxDS52PZBrEmlpi671fn5znFB8aAxM3fM",
+            authDomain: "fir-bc5e9.firebaseapp.com",
+            projectId: "fir-bc5e9",
+            storageBucket: "fir-bc5e9.appspot.com",
+            messagingSenderId: "21975891971",
+            appId: "1:21975891971:web:f8fe5ac8c73a14d215ce36",
+            measurementId: "G-DLLXLFHREG"
+        };
+
+        // Firebase app inicializálása
+        firebase.initializeApp(firebaseConfig);
+
+        // Feltöltés funkció
+        function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            if (file) {
+                // Ellenőrizzük, hogy a kiválasztott fájl egy mp4 videó-e
+                if (file.type !== 'video/mp4') {
+                    alert('Csak mp4 formátumú videókat lehet feltölteni!');
+                    return;
+                }
+
+                // Hozzunk létre egy referencia a Firebase Storage-ba
+                const storageRef = firebase.storage().ref();
+
+                // Készítsünk egy egyedi fájlnevet a feltöltéshez
+                const fileName = 'video_' + Date.now() + '.mp4';
+
+                // Készítsünk egy referencia URL-t a fájlnévhez
+                const fileRef = storageRef.child(fileName);
+
+                // Töltsük fel a fájlt a Storage-ba
+                const uploadTask = fileRef.put(file);
+
+                // Feltöltés eseményfigyelők
+                uploadTask.on('state_changed', 
+                    (snapshot) => {
+                        // Feltöltési állapot frissítése
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        console.log('Feltöltés ' + progress + '%');
+                    },
+                    (error) => {
+                        // Feltöltési hiba
+                        console.error('Hiba a feltöltés közben:', error);
+                    },
+                    () => {
+                        // Feltöltés befejeződött, itt lehetőség van a további műveletekre
+                        console.log('Feltöltés befejezve!');
+                        // Példa: a feltöltött fájl URL-jének lekérése
+                        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                            console.log('A fájl elérhető itt:', downloadURL);
+                            // Itt további műveleteket végezhet a feltöltött fájllal és annak URL-jével
+                        });
+                    }
+                );
+            } else {
+                // Ha nincs fájl kiválasztva
+                alert('Kérlek válassz ki egy fájlt!');
+            }
+        }
+    </script>
+</body>
+</html>
