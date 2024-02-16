@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Playback</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: rgba(255, 255, 255); /* Background color */
+        }
+
+        
+
+        
+        .video-container {
+            width: 800px; /* Fixed width */
+            height: 450px; /* Fixed height */
+            margin: 50px auto;
+            background-color: #000;
+            position: relative; /* Change position to relative */
+            padding-left: 10px;
+            border: 10px;
+            overflow: hidden; /* Hide overflow */
+            float: left;
+        }
+
+        .video-player {
+            position: absolute;
+            top: 50%;
+            left: calc(50% + 10px); /* 10px jobbra tolva */
+            transform: translate(-50%, -50%); /* Center the video */
+            width: 100%;
+            height: auto;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 0;
+            left: calc(0px + 0%); /* 10px jobbra tolva */
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Add a background color for the controls */
+            padding: 10px; /* Add some padding */
+            box-sizing: border-box; /* Include padding in width */
+            display: flex;
+            justify-content: space-between; /* Distribute items evenly */
+            align-items: center; /* Align items vertically */
+        }
+
+        .video-player video {
+            width: 100%;
+            max-height: 100%; /* A videó maximális magassága a téglalap magassága */
+            object-fit: contain; /* Tartalom beillesztése, nem változtatja a téglalap méretét */
+            background-color: #000; /* Háttérszín a videóhoz */
+            border: none; /* Keret eltávolítása */
+        }
+
+        .video-title {
+            position: absolute;
+            bottom: +330px; /* Egy kicsit eltolva a video-container alatt */
+            left: 21.1%;
+            transform: translateX(-50%); /* Középre igazítás */
+            width: 42.2%;
+            background-color: rgb(138, 138, 138);
+            color: #000000;
+            padding: 10px;
+            box-sizing: border-box; /* Include padding in width */
+            text-align: left; /* Center the title */
+        }
+
+        .controls button {
+            background-color: transparent;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .controls button:hover {
+            opacity: 0.7;
+        }
+
+        .time-display {
+            color: #fff;
+        }
+
+        
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><a href="index.html">WeTube</a></h1>
+            <form action="#" method="get">
+                <input type="text" placeholder="Keresés...">
+                <button type="submit">Keresés</button>
+            </form>
+            <nav>
+                <ul>
+                    <li><a href="feltoltes.html">Feltöltés</a></li>
+                    <li><a href="#">Bejelentkezés</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+<div class="video-container">
+    <div class="video-player" id="videoPlayer">
+        <video id="video" controls></video>
+    </div>
+    <div class="controls">
+        <button id="playPauseButton">►</button>
+        <input type="range" id="progressBar" min="0" value="0">
+        <span class="time-display"><span id="progressTime">00:00</span> / <span id="durationTime">00:00</span></span>
+        <button id="muteButton">🔈</button>
+        <button id="fullscreenButton">⛶</button>
+    </div>
+</div>
+<div class="video-title"></div> <!-- Title will appear here -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-compat.js"></script>
+<script>
+    // Firebase konfiguráció
+    const firebaseConfig = {
+        apiKey: "AIzaSyDxDS52PZBrEmlpi671fn5znFB8aAxM3fM",
+        authDomain: "fir-bc5e9.firebaseapp.com",
+        projectId: "fir-bc5e9",
+        storageBucket: "fir-bc5e9.appspot.com",
+        messagingSenderId: "21975891971",
+        appId: "1:21975891971:web:f8fe5ac8c73a14d215ce36",
+        measurementId: "G-DLLXLFHREG"
+    };
+
+    // Initialize Firebase
+    const firebaseApp = firebase.initializeApp(firebaseConfig);
+    const storage = firebase.storage();
+
+    // Get video title from URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const videoTitle = urlParams.get('video');
+
+    // Get Firebase Storage references
+    const storageRef = storage.ref();
+    const videoRef = storageRef.child(`${videoTitle}.mp4`);
+
+    // Get video player and controls elements
+    const video = document.getElementById('video');
+    const controls = document.querySelector('.controls');
+    const playPauseButton = document.getElementById('playPauseButton');
+    const progressTime = document.getElementById('progressTime');
+    const durationTime = document.getElementById('durationTime');
+    const progressBar = document.getElementById('progressBar');
+    const muteButton = document.getElementById('muteButton');
+    const fullscreenButton = document.getElementById('fullscreenButton');
+    const videoTitleElement = document.querySelector('.video-title');
+
+    // Initialize video player
+    let isPlaying = false;
+    let isMuted = false;
+
+    videoRef.getDownloadURL().then((url) => {
+        video.src = url;
+        video.load();
+
+        // Add event listeners
+        video.addEventListener('loadedmetadata', () => {
+            durationTime.textContent = formatTime(video.duration);
+            progressBar.max = video.duration;
+        });
+
+        video.addEventListener('timeupdate', () => {
+            progressTime.textContent = formatTime(video.currentTime);
+            progressBar.value = video.currentTime;
+        });
+
+        video.addEventListener('ended', () => {
+            isPlaying = false;
+            playPauseButton.textContent = '►';
+        });
+    }).catch((error) => {
+        console.error('Error getting video URL:', error);
+    });
+
+    // Play/Pause video
+    playPauseButton.addEventListener('click', () => {
+        if (isPlaying) {
+            video.pause();
+            isPlaying = false;
+            playPauseButton.textContent = '►';
+        } else {
+            video.play();
+            isPlaying = true;
+            playPauseButton.textContent = '❚❚';
+        }
+    });
+
+    // Update progress bar on input
+    progressBar.addEventListener('input', () => {
+        video.currentTime = progressBar.value;
+    });
+
+    // Mute/Unmute video
+    muteButton.addEventListener('click', () => {
+        if (isMuted) {
+            video.muted = false;
+            isMuted = false;
+            muteButton.textContent = '🔈';
+        } else {
+            video.muted = true;
+            isMuted = true;
+            muteButton.textContent = '🔇';
+        }
+    });
+
+    // Fullscreen video
+    fullscreenButton.addEventListener('click', () => {
+        if (video.requestFullscreen) {
+            video.requestFullscreen();
+        } else if (video.webkitRequestFullscreen) {
+            video.webkitRequestFullscreen(); // Safari
+        } else if (video.msRequestFullscreen) {
+            video.msRequestFullscreen(); // IE11
+        }
+    });
+
+    // Format time in MM:SS
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secondsLeft = seconds - minutes * 60;
+        return minutes.toString().padStart(2, '0') + ':' + secondsLeft.toString().padStart(2, '0');
+    }
+
+    // Set video title
+    videoTitleElement.textContent = videoTitle;
+</script>
+</body>
+</html>

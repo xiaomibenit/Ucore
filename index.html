@@ -1,41 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WeTube</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeTube</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .video-thumbnail {
+            width: 200px;
+            height: 150px;
+            margin: 10px;
+            display: inline-block;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: auto;
+        }
+
+        .video-thumbnail .video-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px;
+        }
+
+        .video-link {
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
 </head>
 <body>
-  <header>
+<header>
     <div class="container">
-      <h1><a href="#">WeTube</a></h1>
-      <form action="#" method="get">
-        <input type="text" placeholder="Keresés...">
-        <button type="submit">Keresés</button>
-      </form>
-      <nav>
-        <ul>
-          <li><a href="feltoltes.html">Feltöltés</a></li>
-          <li><a href="#">Bejelentkezés</a></li>
-        </ul>
-      </nav>
+        <h1><a href="#">WeTube</a></h1>
+        <form action="#" method="get">
+            <input type="text" placeholder="Keresés...">
+            <button type="submit">Keresés</button>
+        </form>
+        <nav>
+            <ul>
+                <li><a href="feltoltes.html">Feltöltés</a></li>
+                <li><a href="#">Bejelentkezés</a></li>
+            </ul>
+        </nav>
     </div>
-  </header>
-  <main class="container">
+</header>
+<main class="container">
     <!-- Itt jelennek meg a videók -->
     <section id="videos">
-      <!-- A videók megjelennek itt -->
+        <!-- A videók megjelennek itt -->
     </section>
-  </main>
-  <footer>
+</main>
+<footer>
     <div class="container">
-      <p>&copy; 2024 WeTube - Minden jog fenntartva.</p>
+        <p>&copy; 2024 WeTube - Minden jog fenntartva.</p>
     </div>
-  </footer>
-  <!-- Firebase inicializálás -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js"></script>
-  <script src="app.js"></script>
+</footer>
+<!-- Firebase inicializálás -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-compat.js"></script>
+<script>
+    // Replace these values with your Firebase project configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyDxDS52PZBrEmlpi671fn5znFB8aAxM3fM",
+        authDomain: "fir-bc5e9.firebaseapp.com",
+        projectId: "fir-bc5e9",
+        storageBucket: "fir-bc5e9.appspot.com",
+        messagingSenderId: "21975891971",
+        appId: "1:21975891971:web:f8fe5ac8c73a14d215ce36",
+        measurementId: "G-DLLXLFHREG"
+    };
+
+    // Initialize Firebase
+    const firebaseApp = firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+
+    // Get a reference to the Firebase storage
+    const storage = firebase.storage();
+
+    // Get a reference to the videos section
+    const videosSection = document.getElementById('videos');
+
+    // Function to add a video thumbnail to the videos section with a link
+    function addVideoThumbnail(videoTitle, videoURL) {
+        const videoThumbnailElement = document.createElement('a');
+        videoThumbnailElement.classList.add('video-thumbnail');
+        videoThumbnailElement.setAttribute('href', `watch.html?video=${videoTitle}`);
+        videoThumbnailElement.innerHTML = `
+            <img src="${videoURL}" alt="${videoTitle}">
+            <div class="video-info">
+                <p>${videoTitle}</p>
+            </div>
+        `;
+        videosSection.appendChild(videoThumbnailElement);
+    }
+
+    // Get a reference to the root directory of the Firebase storage
+    const storageRef = storage.ref();
+
+    // List all items in the root directory and add video thumbnails with links
+    function listAndAddVideoThumbnails() {
+        storageRef.listAll().then((result) => {
+            // Iterate over each item
+            result.items.forEach((itemRef) => {
+                // Check if the item is an mp4 video
+                if (itemRef.name.endsWith('.mp4')) {
+                    // Get the name of the video (remove the file extension)
+                    const videoTitle = itemRef.name.split('.').slice(0, -1).join('.');
+
+                    // Check if there's a thumbnail with the same name
+                    const thumbnailRef = storageRef.child(`${videoTitle}.png`);
+                    thumbnailRef.getDownloadURL().then((thumbnailUrl) => {
+                        // Add the video thumbnail to the videos section with a link
+                        addVideoThumbnail(videoTitle, thumbnailUrl);
+                    }).catch((thumbnailError) => {
+                        console.error('Error getting thumbnail URL:', thumbnailError);
+                        // If there's no thumbnail, use the video itself as thumbnail
+                        itemRef.getDownloadURL().then((videoUrl) => {
+                            addVideoThumbnail(videoTitle, videoUrl);
+                        }).catch((videoError) => {
+                            console.error('Error getting video URL:', videoError);
+                        });
+                    });
+                }
+            });
+        }).catch((error) => {
+            console.error('Error listing items:', error);
+        });
+    }
+
+    // Call the function to list and add video thumbnails
+    listAndAddVideoThumbnails();
+</script>
 </body>
 </html>
